@@ -5,14 +5,14 @@ if(!empty($_GET['last'])&& !empty($_GET['first'])) {
   require_once('../../mysqli_config.php'); //adjust the relative path as necessary to find your config file
   //Retrieve specific vendor data using prepared statements:
   $query = "SELECT r.reviewer_ID, alb.album_ID, alb.artist_ID, r.reviewer_FName, r.reviewer_LName, rate.album_Score, alb.release_Date, art.artist_Name, contrib.album_Name
-            from Reviewer as r NATURAL JOIN Album_Rating as rate join Album as alb on (rate.album_ID = alb.album_ID) join Album_Contributors contrib on (contrib.artist_ID = alb.artist_ID) join Artist art on (contrib.artist_ID = art.artist_ID)
+            FROM Reviewer as r NATURAL JOIN Album_Rating as rate join Album alb on (rate.album_ID = alb.album_ID) join Album_Contributors contrib on (alb.album_ID = contrib.album_ID) join Artist art on (alb.artist_ID = art.artist_ID)
             WHERE r.reviewer_FName = ? and r.reviewer_LName = ?
             GROUP BY r.reviewer_ID, alb.album_ID,alb.artist_ID,contrib.album_Name
             HAVING rate.album_Score >
             (SELECT AVG(UserAvg.album_Score)
             from (SELECT r2.reviewer_ID, alb2.album_ID, alb2.artist_ID, r2.reviewer_FName, r2.reviewer_LName, rate2.album_Score, alb2.release_Date, art2.artist_Name, contrib2.album_Name
-            from Reviewer as r2 NATURAL JOIN Album_Rating as rate2 join Album as alb2 on (rate2.album_ID = alb2.album_ID) join Album_Contributors contrib2 on (contrib2.artist_ID = alb2.artist_ID) join Artist art2 on (contrib2.artist_ID = art2.artist_ID)
-            WHERE r2.reviewer_FName = ? and r2.reviewer_LName=?) as UserAvg)";
+            FROM Reviewer as r2 NATURAL JOIN Album_Rating as rate2 join Album alb2 on (rate2.album_ID = alb2.album_ID) join Album_Contributors contrib2 on (alb2.album_ID = contrib2.album_ID) join Artist art2 on (alb2.artist_ID = art2.artist_ID)
+            WHERE r2.reviewer_FName = ? and r2.reviewer_LName = ?) as UserAvg)";
   $stmt = mysqli_prepare($dbc, $query);
   mysqli_stmt_bind_param($stmt, "ssss", $first_name, $last_name,$first_name,$last_name);
   mysqli_stmt_execute($stmt);
@@ -24,18 +24,18 @@ if(!empty($_GET['last'])&& !empty($_GET['first'])) {
     $customer = mysqli_fetch_assoc($result); //Fetches the row as an associative array with DB attributes as keys
     // $cust_id = $customer['CUST_CODE'];
     $query2 = "SELECT r.reviewer_ID, alb.album_ID, alb.artist_ID, r.reviewer_FName, r.reviewer_LName, rate.album_Score, alb.release_Date, art.artist_Name, contrib.album_Name
-              from Reviewer as r NATURAL JOIN Album_Rating as rate join Album as alb on (rate.album_ID = alb.album_ID) join Album_Contributors contrib on (contrib.artist_ID = alb.artist_ID) join Artist art on (contrib.artist_ID = art.artist_ID)
+              FROM Reviewer as r NATURAL JOIN Album_Rating as rate join Album alb on (rate.album_ID = alb.album_ID) join Album_Contributors contrib on (alb.album_ID = contrib.album_ID) join Artist art on (alb.artist_ID = art.artist_ID)
               WHERE r.reviewer_FName = ? and r.reviewer_LName = ?
               GROUP BY r.reviewer_ID, alb.album_ID,alb.artist_ID,contrib.album_Name
               HAVING rate.album_Score >
               (SELECT AVG(UserAvg.album_Score)
               from (SELECT r2.reviewer_ID, alb2.album_ID, alb2.artist_ID, r2.reviewer_FName, r2.reviewer_LName, rate2.album_Score, alb2.release_Date, art2.artist_Name, contrib2.album_Name
-              from Reviewer as r2 NATURAL JOIN Album_Rating as rate2 join Album as alb2 on (rate2.album_ID = alb2.album_ID) join Album_Contributors contrib2 on (contrib2.artist_ID = alb2.artist_ID) join Artist art2 on (contrib2.artist_ID = art2.artist_ID)
-              WHERE r2.reviewer_FName = ? and r2.reviewer_LName=?) as UserAvg)";
+              FROM Reviewer as r2 NATURAL JOIN Album_Rating as rate2 join Album alb2 on (rate2.album_ID = alb2.album_ID) join Album_Contributors contrib2 on (alb2.album_ID = contrib2.album_ID) join Artist art2 on (alb2.artist_ID = art2.artist_ID)
+              WHERE r2.reviewer_FName = ? and r2.reviewer_LName = ?) as UserAvg)";
 
     $query3 = "SELECT Round(AVG(UserAvg.album_Score),2) as user_AVG
               from (SELECT r.reviewer_ID, alb.album_ID, alb.artist_ID, r.reviewer_FName, r.reviewer_LName, rate.album_Score, alb.release_Date, art.artist_Name, contrib.album_Name
-              from Reviewer as r NATURAL JOIN Album_Rating as rate join Album as alb on (rate.album_ID = alb.album_ID) join Album_Contributors contrib on (contrib.artist_ID = alb.artist_ID) join Artist art on (contrib.artist_ID = art.artist_ID)
+              from Reviewer as r NATURAL JOIN Album_Rating as rate join Album as alb on (rate.album_ID = alb.album_ID) join Album_Contributors contrib on (contrib.album_ID = alb.album_ID) join Artist art on (contrib.artist_ID = art.artist_ID)
               WHERE r.reviewer_FName = ? and r.reviewer_LName=?) as UserAvg";
 
     $stmt2 = mysqli_prepare($dbc, $query2);

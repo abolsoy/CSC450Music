@@ -68,7 +68,7 @@
 		<br>
 		<br>
 		Enter an album name:
-		<input type="text" name="album_Name">
+		<input type="text" name="alb_Title">
 		<br>
 		<br>
     <input type="submit" value="Add Album">

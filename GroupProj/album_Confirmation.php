@@ -1,5 +1,5 @@
 <?php
-    if(!empty($_GET['artist_ID']) && !empty($_GET['album_Name']) && !empty($_GET['rec_Label']) && !empty($_GET['rel_Date']) && !empty($_GET['genre_ID'])) {
+    if(!empty($_GET['artist_ID']) && !empty($_GET['alb_Title']) && !empty($_GET['rec_Label']) && !empty($_GET['rel_Date']) && !empty($_GET['genre_ID'])) {
     require_once('../../mysqli_config.php');
 
     $query1 = "SELECT MAX(album_ID) FROM Album";
@@ -11,7 +11,7 @@
     $genre_id = $_GET['genre_ID'];
     $rec_label = $_GET['rec_Label'];
     $rel_date = $_GET['rel_Date'];
-    $album_name = $_GET['album_Name'];
+    $alb_Title = $_GET['alb_Title'];
 
     $query2 = "SELECT album_Name FROM Album_Contributors WHERE album_Name = ?";
     $stmt1 = mysqli_prepare($dbc, $query2);
@@ -35,7 +35,7 @@
 
     $query5 = "INSERT INTO Album_Contributors(album_ID, artist_ID, album_Name) VALUES (?, ?, ?)";
     $stmt4 = mysqli_prepare($dbc, $query5);
-    mysqli_stmt_bind_param($stmt4, "iis", $album_id, $artist_id, $album_name);
+    mysqli_stmt_bind_param($stmt4, "iis", $album_id, $artist_id, $alb_Title);
 
     if(!mysqli_stmt_execute($stmt2) || !mysqli_stmt_execute($stmt3) || !mysqli_stmt_execute($stmt4)) { //it did not run successfully
       echo "<h2>We were unable to add the customer at this time.</h2>";
@@ -64,7 +64,7 @@
       <meta charset ="utf-8">
   </head>
   <body>
-    <h2>The album "<?php echo "$album_name";?>" was successfully added</h2>
+    <h2>The album "<?php echo "$alb_Title";?>" was successfully added</h2>
     <h3><a href="insert_Album_Info.php">Add another album</a><h3>
       <h3><a href="index.html">Back to Home</a></h3>
     </body>

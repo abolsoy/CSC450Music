@@ -7,9 +7,9 @@ if(!empty($_GET['last'])) {
     $first_name = NULL;
   require_once('../../mysqli_config.php'); //adjust the relative path as necessary to find your config file
   //Retrieve specific vendor data using prepared statements:
-  $query = "SELECT r.reviewer_ID, alb.album_ID, alb.artist_ID, r.reviewer_FName, r.reviewer_LName, rate.album_Score, alb.release_Date, Artist.artist_Name, Album_Contributors.album_Name
-            from Reviewer as r NATURAL JOIN Album_Rating as rate join Album as alb on (rate.album_ID = alb.album_ID) join Album_Contributors on (Album_Contributors.artist_ID = alb.artist_ID)
-            join Artist on (Album_Contributors.artist_ID = Artist.artist_ID) WHERE r.reviewer_FName = ? and r.reviewer_LName = ?";
+  $query = "SELECT r.reviewer_ID, r.reviewer_FName, r.reviewer_LName, alb.album_ID, rate.album_Score, art.artist_Name, contrib.album_Name
+            FROM Reviewer as r NATURAL JOIN Album_Rating as rate join Album alb on (rate.album_ID = alb.album_ID) join Album_Contributors contrib on (alb.album_ID = contrib.album_ID) join Artist art on (alb.artist_ID = art.artist_ID)
+            WHERE r.reviewer_FName = ? and r.reviewer_LName = ?";
   $stmt = mysqli_prepare($dbc, $query);
   mysqli_stmt_bind_param($stmt, "ss", $first_name, $last_name);
   mysqli_stmt_execute($stmt);
@@ -20,9 +20,9 @@ if(!empty($_GET['last'])) {
     echo "this user has reviews";
     $customer = mysqli_fetch_assoc($result); //Fetches the row as an associative array with DB attributes as keys
     // $cust_id = $customer['CUST_CODE'];
-    $query2 = "SELECT r.reviewer_ID, alb.album_ID, alb.artist_ID, r.reviewer_FName, r.reviewer_LName, rate.album_Score, alb.release_Date, Artist.artist_Name, Album_Contributors.album_Name
-              from Reviewer as r NATURAL JOIN Album_Rating as rate join Album as alb on (rate.album_ID = alb.album_ID) join Album_Contributors on (Album_Contributors.artist_ID = alb.artist_ID)
-              join Artist on (Album_Contributors.artist_ID = Artist.artist_ID) WHERE r.reviewer_FName = ? and r.reviewer_LName = ?";
+    $query2 = "SELECT r.reviewer_ID, r.reviewer_FName, r.reviewer_LName, alb.album_ID, rate.album_Score, art.artist_Name, contrib.album_Name
+              FROM Reviewer as r NATURAL JOIN Album_Rating as rate join Album alb on (rate.album_ID = alb.album_ID) join Album_Contributors contrib on (alb.album_ID = contrib.album_ID) join Artist art on (alb.artist_ID = art.artist_ID)
+              WHERE r.reviewer_FName = ? and r.reviewer_LName = ?";
     $stmt2 = mysqli_prepare($dbc, $query2);
     mysqli_stmt_bind_param($stmt2, "ss", $first_name,$last_name); //second argument one for each ? either i(integer), d(double), b(blob), s(string or anything else)
     mysqli_stmt_execute($stmt2);
